@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SettingActivity">
+
+    <EditText
+        android:id="@+id/goalWeight"
+        android:layout_width="162dp"
+        android:layout_height="96dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="192dp"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/changeWeight" />
+
+    <Button
+        android:id="@+id/buttonHome"
+        android:layout_width="91dp"
+        android:layout_height="58dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="4dp"
+        android:text="Home"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:onClick="Home" />
+
+    <Button
+        android:id="@+id/buttonSetting"
+        android:layout_width="91dp"
+        android:layout_height="58dp"
+        android:layout_marginBottom="4dp"
+        android:text="Settings"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/buttonLogOut"
+        app:layout_constraintHorizontal_bias="0.471"
+        app:layout_constraintStart_toEndOf="@+id/buttonHome"
+        android:enabled="false"/>
+
+    <Button
+        android:id="@+id/buttonLogOut"
+        android:layout_width="91dp"
+        android:layout_height="58dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="4dp"
+        android:text="Log Out"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:onClick="Logout"/>
+
+    <TextView
+        android:id="@+id/changeWeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="104dp"
+        android:layout_marginEnd="216dp"
+        android:text="Change goal weight"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="220dp"
+        android:text="Change Password"
+        app:layout_constraintBottom_toTopOf="@+id/changePassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/goalWeight"
+        app:layout_constraintVertical_bias="0.58" />
+
+    <EditText
+        android:id="@+id/changePassword"
+        android:layout_width="162dp"
+        android:layout_height="96dp"
+        android:layout_marginEnd="188dp"
+        android:layout_marginBottom="196dp"
+        android:ems="10"
+        android:inputType="textPassword"
+        app:layout_constraintBottom_toTopOf="@+id/buttonSetting"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/changeGoal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="160dp"
+        android:text="@string/submit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.31"
+        app:layout_constraintStart_toEndOf="@+id/submitGoalWeight"
+        app:layout_constraintTop_toTopOf="parent"
+        android:onClick="ChangeGoal"/>
+
+    <Button
+        android:id="@+id/changePass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="29dp"
+        android:layout_marginTop="196dp"
+        android:text="@string/submit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/changePassword"
+        app:layout_constraintTop_toBottomOf="@+id/changeGoal"
+        android:onClick="ChangePass"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
