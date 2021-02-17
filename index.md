@@ -4,6 +4,7 @@ To demonstrate my skills as a software engineer I have provided three artifacts 
 
 1. **Software Design and Engineering**
 Below is the applications main page layout code. This page contains a scrollable table which gets dynamically created when the user connects to the main page. The text view below is used to display the users goal weight and how close they are to meeting there goal. This is also dynamically added and will be showed in the next artifact. There are three buttons one which allows the user to add additional days to the table, it contains 30 days by default. The other two buttons are for navigation, logout and settings.
+
 ```
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -158,8 +159,8 @@ The init function is what builds the weight tracking table.
             ll.addView(row, i);
         }
     }
-    ```
-    ```
+```
+```
     protected  void applyTextWatcher(final EditText et, final int finalDayN){
         et.addTextChangedListener(new TextWatcher() {
             @Override
