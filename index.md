@@ -104,11 +104,13 @@ Below is the applications main page layout code. This page contains a scrollable
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 ```
+
 **Algorithms and Data Structures**
 
 This artifact builds on the previous one by implementing its functionality. The functions below are what build the the layout page and fill it with useful information.
 
 The init function is what builds the weight tracking table.
+
 ```
     public void init(){
         //building out table
