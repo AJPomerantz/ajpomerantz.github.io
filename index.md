@@ -2,7 +2,8 @@
 
 To demonstrate my skills as a software engineer I have provided three artifacts which show my skills in software design and engineering, algorithms and data structures, and databases. The three artifacts come from a weight tacking application I created with Android Studio. The application tracks the users daily weight to help them reach a goal they have set for themselves. 
 
-1. **Software Design and Engineering**
+**Software Design and Engineering**
+
 Below is the applications main page layout code. This page contains a scrollable table which gets dynamically created when the user connects to the main page. The text view below is used to display the users goal weight and how close they are to meeting there goal. This is also dynamically added and will be showed in the next artifact. There are three buttons one which allows the user to add additional days to the table, it contains 30 days by default. The other two buttons are for navigation, logout and settings.
 
 ```
@@ -103,7 +104,8 @@ Below is the applications main page layout code. This page contains a scrollable
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 ```
-2. **Algorithms and Data Structures**
+**Algorithms and Data Structures**
+
 This artifact builds on the previous one by implementing its functionality. The functions below are what build the the layout page and fill it with useful information.
 
 The init function is what builds the weight tracking table.
@@ -279,7 +281,7 @@ The init function is what builds the weight tracking table.
 
 ```
 
-3. **Databases**
+**Databases**
 
 Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
