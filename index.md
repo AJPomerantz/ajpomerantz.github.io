@@ -165,6 +165,7 @@ The init function is what builds the weight tracking table. This function calls 
     }
 ```
 The apply text watcher function adds a text watcher to each edit text and ethier adds, updates or deletes based on what the user enters.  
+
 ```
     protected  void applyTextWatcher(final EditText et, final int finalDayN){
         et.addTextChangedListener(new TextWatcher() {
@@ -218,8 +219,10 @@ The apply text watcher function adds a text watcher to each edit text and ethier
             }
         });
     }
- ```  
- The goal reached function get called when the user reaches there goal. It will send them an SMS, if they accepted the permissions when they first opened the app. It also sets there new goal to 0 so they can go to the settings and set another goal.
+ ``` 
+ 
+The goal reached function get called when the user reaches there goal. It will send them an SMS, if they accepted the permissions when they first opened the app. It also sets there new goal to 0 so they can go to the settings and set another goal.
+ 
  
  ```
     
