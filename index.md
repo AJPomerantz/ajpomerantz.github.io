@@ -109,7 +109,7 @@ Below is the applications main page layout code. This page contains a scrollable
 
 This artifact builds on the previous one by implementing its functionality. The functions below are what build the the layout page and fill it with useful information.
 
-The init function is what builds the weight tracking table.
+The init function is what builds the weight tracking table. This function calls the apply text watcher and goal reached functions.
 
 ```
     public void init(){
@@ -164,6 +164,7 @@ The init function is what builds the weight tracking table.
         }
     }
 ```
+The apply text watcher function adds a text watcher to each edit text and ethier adds, updates or deletes based on what the user enters.  
 ```
     protected  void applyTextWatcher(final EditText et, final int finalDayN){
         et.addTextChangedListener(new TextWatcher() {
@@ -217,6 +218,11 @@ The init function is what builds the weight tracking table.
             }
         });
     }
+ ```  
+ The goal reached function get called when the user reaches there goal. It will send them an SMS, if they accepted the permissions when they first opened the app. It also sets there new goal to 0 so they can go to the settings and set another goal.
+ 
+ ```
+    
     public void GoalReached() {
 // when the user reaches there goal it sends them an SMS if they granted all the permissions and then sets the goal to 0. If the user denied permissions then it just sets there goal to 0
             SmsManager smsManager = SmsManager.getDefault();
@@ -280,41 +286,242 @@ The init function is what builds the weight tracking table.
 
 
 }
-
 ```
 
 **Databases**
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+Below is the database creation and calls. There are three tables total, login table, goal weight table and daily weight table. The login table stores the users credentials and there id. The goal weight table stores the users id, goal weight and row count. 
 ```
+    private static final class LoginTable {
+        private static final String TABLE = "Login";
+        private static final String COL_ID = "_id";
+        private static final String COL_USERNAME = "username";
+        private static final String COL_PASSWORD = "password";
+    }
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+    private static final class GoalWeightTable {
+        private static final String TABLE = "GoalWeight";
+        private static final String COL_ID = "_id";
+        private static final String COL_GOALWEIGHT = "goal";
+        private static final String COL_ROWCOUNT = "rowcount";
+    }
+    private static final class DailyWeightTable {
+        private static final String TABLE = "DailyWeight";
+        private static final String COL_ID = "_id";
+        private static final String COL_DAY = "daynumber";
+        private static final String COL_DAILYWEIGHT = "daily";
+    }
 
-### Jekyll Themes
+    @Override //creates tables
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL("create table " + LoginTable.TABLE + " (" +
+                LoginTable.COL_ID + " integer primary key autoincrement, " +
+                LoginTable.COL_USERNAME + " text NOT NULL UNIQUE, " +
+                LoginTable.COL_PASSWORD + " text not null)");
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/AJPomerantz/ajpomerantz.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+        db.execSQL("create table " + GoalWeightTable.TABLE + " (" +
+                GoalWeightTable.COL_ID + " integer primary key, " +
+                GoalWeightTable.COL_GOALWEIGHT + " REAL, " +
+                GoalWeightTable.COL_ROWCOUNT + " integer, "+
+                "FOREIGN KEY(" + GoalWeightTable.COL_ID + ") REFERENCES " + LoginTable.TABLE +"(" + LoginTable.COL_ID + ") )");
 
-### Support or Contact
+        db.execSQL("create table " + DailyWeightTable.TABLE + " (" +
+                DailyWeightTable.COL_ID + " integer, " +
+                DailyWeightTable.COL_DAY + " integer, " +
+                DailyWeightTable.COL_DAILYWEIGHT + " REAL, " +
+                "FOREIGN KEY(" + DailyWeightTable.COL_ID + ") REFERENCES " + LoginTable.TABLE +"(" + LoginTable.COL_ID + ") )");
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+
+    }
+
+    @Override //when upgraded tabled get dropped and recreated
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("drop table if exists " + LoginTable.TABLE);
+        db.execSQL("drop table if exists " + GoalWeightTable.TABLE);
+        db.execSQL("drop table if exists " + DailyWeightTable.TABLE);
+        onCreate(db);
+    }
+
+    @Override
+    public  void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        if (!db.isReadOnly()) {
+            // Enable foreign key constraints
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                db.execSQL("pragma foreign_keys = on;");
+            } else {
+                db.setForeignKeyConstraintsEnabled(true);
+            }
+        }
+    }
+
+    public List<DailyWeight> getDailyWeights (int userId){
+        List<DailyWeight> dailyWeights = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql = "SELECT " + DailyWeightTable.COL_DAILYWEIGHT + ", " + DailyWeightTable.COL_DAY + " FROM " + DailyWeightTable.TABLE +
+                     " WHERE " + DailyWeightTable.COL_ID + " = ?";
+        Cursor cursor = db.rawQuery(sql, new String[] { Float.toString(userId) });
+        if(cursor.moveToFirst()){
+            do {
+                float daily = cursor.getFloat(0);
+                int day = cursor.getInt(1);
+                DailyWeight dailyweight = new DailyWeight(day, daily);
+                dailyWeights.add(dailyweight);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return  dailyWeights;
+    }
+//adds the users daily weight that they record
+    public void addDailyWeight(DailyWeight dailyWeight){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DailyWeightTable.COL_DAY, dailyWeight.getDay());
+        values.put(DailyWeightTable.COL_DAILYWEIGHT, dailyWeight.getDaily());
+        values.put(DailyWeightTable.COL_ID, dailyWeight.getId());
+        db.insert(DailyWeightTable.TABLE, null, values);
+        db.close();
+    }
+// updates the users daily weight if they change it
+    public void updateDailyWeight (DailyWeight dailyWeight){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        String[] args = {String.valueOf(dailyWeight.getId()), String.valueOf(dailyWeight.getDay())} ;
+        values.put(DailyWeightTable.COL_DAY, dailyWeight.getDay());
+        values.put(DailyWeightTable.COL_DAILYWEIGHT, dailyWeight.getDaily());
+        values.put(DailyWeightTable.COL_ID, dailyWeight.getId());
+        db.update(DailyWeightTable.TABLE, values,
+                DailyWeightTable.COL_ID + " =?" + " AND " + DailyWeightTable.COL_DAY + " =?", args);
+        db.close();
+    }
+    //deletes the users daily weight
+    public  void deleteDailyWeight (int id, int day){
+        SQLiteDatabase db = getWritableDatabase();
+        String[] whereArgs = {String.valueOf(id), String.valueOf(day)};
+        db.delete(DailyWeightTable.TABLE,
+                DailyWeightTable.COL_ID + " =?" + " AND " + DailyWeightTable.COL_DAY + " =?", whereArgs);
+        db.close();
+    }
+//adds the users new goal weight
+    public boolean addGoalWeight(float goalWeight, int id){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(GoalWeightTable.COL_GOALWEIGHT, goalWeight);
+        values.put(GoalWeightTable.COL_ID, id);
+        values.put(GoalWeightTable.COL_ROWCOUNT, 12);
+        long insert = db.insert(GoalWeightTable.TABLE, null, values);
+        db.close();
+        if (insert == -1){
+            return false;
+        }
+        else  {
+            return true;
+        }
+
+    }
+    //updates the users goal weight
+    public void updateGoalWeight (GoalWeight goalWeight){
+        SQLiteDatabase db = getWritableDatabase();
+        String[] args = {String.valueOf(goalWeight.getId())};
+        ContentValues values = new ContentValues();;
+        values.put(GoalWeightTable.COL_GOALWEIGHT, goalWeight.getGoal());
+        db.update(GoalWeightTable.TABLE, values,
+                DailyWeightTable.COL_ID + " =? ", args);
+        db.close();
+    }
+    //gets the users goal weight
+    public GoalWeight getGoal(int id) {
+        GoalWeight goalWeight = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String sql = "select * from " + GoalWeightTable.TABLE +
+                " where " + GoalWeightTable.COL_ID + " = ?";
+        Cursor cursor = db.rawQuery(sql, new String[] { Float.toString(id) });
+
+        if (cursor.moveToFirst()) {
+            goalWeight = new GoalWeight();
+            goalWeight.setGoal(cursor.getFloat(1));
+        }
+        cursor.close();
+        db.close();
+        return goalWeight;
+    }
+    //gets the users row count
+    public int getRowCount(int id) {
+        int rowCount = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String sql = "select " + GoalWeightTable.COL_ROWCOUNT + " from " + GoalWeightTable.TABLE +
+                " where " + GoalWeightTable.COL_ID + " = ?";
+        Cursor cursor = db.rawQuery(sql, new String[] { Float.toString(id) });
+
+        if (cursor.moveToFirst()) {
+            rowCount = cursor.getInt(0);
+        }
+        cursor.close();
+        db.close();
+        return rowCount;
+    }
+    //updates the users row count
+    public void updateRowCount (GoalWeight goalWeight){
+        SQLiteDatabase db = getWritableDatabase();
+        String[] args = {String.valueOf(goalWeight.getId())};
+        ContentValues values = new ContentValues();;
+        values.put(GoalWeightTable.COL_ROWCOUNT, goalWeight.getRowCount());
+        db.update(GoalWeightTable.TABLE, values,
+                DailyWeightTable.COL_ID + " =? ", args);
+        db.close();
+    }
+//checks the users login credentials
+    public Login getLogin(String username, String password) {
+        Login login = null;
+        username = username.toUpperCase();
+        String sql = "select " + LoginTable.COL_ID + " from " + LoginTable.TABLE +
+                " where " + LoginTable.COL_USERNAME + " = ?" +
+                " and " + LoginTable.COL_PASSWORD + " = ?";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+            Cursor cursor = db.rawQuery(sql, new String[]{username, password});
+
+            if (cursor.moveToFirst()) {
+
+                int userId = cursor.getInt(0);
+                login = new Login(userId);
+            }
+            else{
+
+            }
+            cursor.close();
+            db.close();
+            return login;
+    }
+// adds a new login to the database
+    public boolean addLogin(String username, String password){
+        username = username.toUpperCase();
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(LoginTable.COL_USERNAME, username);
+        values.put(LoginTable.COL_PASSWORD, password);
+       long insert = db.insert(LoginTable.TABLE, null, values);
+        db.close();
+       if(insert == -1){
+           return false;
+       }
+       else{
+           return true;
+       }
+    }
+//updates the users password
+    public void updateLogin (Login login){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();;
+        String[] args = {String.valueOf(login.getId())};
+        values.put(LoginTable.COL_PASSWORD, login.getPassword());
+        db.update(LoginTable.TABLE, values,
+                DailyWeightTable.COL_ID + " =? ", args);
+        db.close();
+    }
+}
+```
