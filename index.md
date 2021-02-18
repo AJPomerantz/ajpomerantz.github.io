@@ -292,7 +292,9 @@ The goal reached function get called when the user reaches there goal. It will s
 ```
 
 **Databases**
+
 Below is the database creation and calls. There are three tables total, login table, goal weight table and daily weight table. The login table stores the users credentials and there id. The goal weight table stores the users id, goal weight and row count. 
+
 ```
     private static final class LoginTable {
         private static final String TABLE = "Login";
