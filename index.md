@@ -1,8 +1,9 @@
 ## Welcome to Adam Pomerantz's ePortfolio
 
-To demonstrate my skills as a software engineer I have provided three artifacts which show my skills in software design and engineering, algorithms and data structures, and databases. The three artifacts come from a weight tacking application I created with Android Studio. The application tracks the users daily weight to help them reach a goal they have set for themselves. 
+To demonstrate my skills as a software engineer I have provided three artifacts which show my skills in software design and engineering, algorithms and data structures, and databases. The three artifacts come from a weight tacking application I created with Android Studio. The application tracks the users daily weight to help them reach a goal they have set for themselves. I selected this item because I believe it does the best job of showcasing my skills from front end to back end.
 
 **Software Design and Engineering**
+The components I have been currently working on to display my Software Design/Engineering skills are the main page and main activity. The main page is the xml file, and the main activity is the java. The main page is a table of days where the user can enter their weights. I improved the artifact by removing copy and pasted code from both the java and xml file. I also improved it by adding a way for the user to add new rows and made the table scrollable. I met my enhancement plan from Module One and went a bit further by implementing the scroll ability. From on the artifact, I learned that I have improved a lot of a programmer in the last year. I ended up entirely gutting the java and xml files to completely enhance the application. One challenge I faced was dynamically adding the on text changed event listeners dynamically. I also haven’t touched Android Studio since I last worked on the application a year ago, so it took me a bit to become reacquainted with it.
 
 Below is the applications main page layout code. This page contains a scrollable table which gets dynamically created when the user connects to the main page. The text view below is used to display the users goal weight and how close they are to meeting there goal. This is also dynamically added and will be showed in the next artifact. There are three buttons one which allows the user to add additional days to the table, it contains 30 days by default. The other two buttons are for navigation, logout and settings.
 
@@ -106,6 +107,8 @@ Below is the applications main page layout code. This page contains a scrollable
 ```
 
 **Algorithms and Data Structures**
+
+The components I have been currently working on to display my algorithms and data structure skills is the main activity. The main activity is the java file behind the main page xml file. I enhanced the algorithms by making each row, from the table, which is displayed on the main page, to be dynamically added. I also added the code which allows the add rows button to function. Finally, I created a new algorithm which calculates how much weight they have left until they reach their goal. If they meet their goal it gives the user praise and tells them to set another goal. I exceeded the enhancement plan I set up in module one. I crated a way to dynamically create the table and add additional days. I surpassed the plan by adding the dynamic text which tells the user how much weight they have left until they reach their goal and congratulates them if they reach it. I learned a lot about myself as a programmer and the progress I have made. When I initially made the application, I could not figure out how to dynamically add rows to a table, but it came very easily this time around. A challenge I faced was coming up with a good way to update the remaining weight text when the user enters a new weight. I had to make sure it would only update if they updated or add a new value to the last day which has a weight. The enhancements I am making to the application are drastically improving the applications useability and functionality.
 
 This artifact builds on the previous one by implementing its functionality. The functions below are what build the the layout page and fill it with useful information.
 
@@ -292,6 +295,8 @@ The goal reached function get called when the user reaches there goal. It will s
 ```
 
 **Databases**
+
+For the database enhancements I added a new column and enhanced its over all reliability. The column I added tracks how many rows the table has. The user can add rows to increase how long they track their weight for. I also made the following enhancements: I added a foreign key on the goal weight table id column which references the logins tables id column, I also added a similar foreign key on the daily weight tables user id field which references the login tables user id. These foreign keys will help prevent bad data from being inserted into the database. Finally, I created an update method which allows the row count number to be updated. I was able to exceed the enhancement plans I made in module one. Originally, I was only going to add support for the table row count, but I ended up doing much more than that. I did not face many challenges, but I was able to see how much I have improved since I originally created this application.
 
 Below is the database creation and calls. There are three tables total, login table, goal weight table and daily weight table. The login table stores the users credentials and there id. The goal weight table stores the users id, goal weight and row count. 
 
