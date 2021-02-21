@@ -2,8 +2,9 @@
 
 To demonstrate my skills as a software engineer, I have provided three artifacts which show my skills in software design and engineering, algorithms and data structures, and databases. The three artifacts come from a weight tacking application I created with Android Studio. The application tracks the user’s daily weight to help them reach a goal they have set for themselves. I selected this item because I believe it does the best job of showcasing my skills from front end to back end. I originally created the application in late 2019, since then I have drastically improved as a software engineer. 
 
-Here is the code review I made before I made any enhancements.
-video: https://www.youtube.com/embed/42ac-EtVP6A
+Here is the code review I made before I made any enhancements
+
+[Code Review](https://youtu.be/42ac-EtVP6A)
 
 **Software Design and Engineering**
 
